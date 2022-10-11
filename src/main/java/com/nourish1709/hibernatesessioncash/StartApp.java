@@ -2,7 +2,6 @@ package com.nourish1709.hibernatesessioncash;
 
 import com.nourish1709.hibernatesessioncash.entity.Course;
 import com.nourish1709.hibernatesessioncash.session.SessionFactory;
-import lombok.Cleanup;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
@@ -14,19 +13,16 @@ public class StartApp {
         DataSource dataSource = constructNewDataSource();
 
         final var sessionFactory = new SessionFactory(dataSource);
-        @Cleanup final var session = sessionFactory.createSession();
+        try (final var session = sessionFactory.createSession()) {
+//            final Course course = new Course();
+//            course.setId(3);
+//            course.setName("Intro to JPA");
+//            session.persist(course);
 
-        final var course1 = session.find(Course.class, 1L);
-
-        final var course2 = session.find(Course.class, 1L);
-
-        System.out.println(course1 == course2);
-
-        course1.setName("newName");
-
-        final var course3 = session.find(Course.class, 2L);
-
-        System.out.println(course1 == course3);
+            final Course course = session.find(Course.class, 3);
+            System.out.println(course);
+//            session.remove(course);
+        }
     }
 
     private static DataSource constructNewDataSource() {
